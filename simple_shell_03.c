@@ -87,10 +87,6 @@ int main(int argc, char const *argv[])
 	{
 		write(1, ":) ", 3);
 		getline(&argum[0], &size, stdin);
-		if (argum[0][0] == 'e')
-		{
-			exit(1);
-		}
 		stoarr(argum[0], argum);
 		if (fork() == 0 && execvp(argum[0], argum) == -1)
 			perror(pname);
