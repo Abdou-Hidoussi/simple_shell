@@ -2,7 +2,6 @@
 /**
  * _strdup - duplicate a string
  * @str: the string to duplicate
- *
  * Return: string.
  */
 char *_strdup(char const *str)
@@ -40,6 +39,25 @@ char *_strdup(char const *str)
 	return (p);
 }
 /**
+*stoarr - convert a string to array seperated by space
+*@str: string
+*@tab: the table to fill from 1 index
+*/
+void stoarr(char *str, char **tab)
+{
+	char *token;
+	int s = 1;
+
+	token = strtok(str, "\n");
+	token = strtok(token, " ");
+	while (token != NULL)
+	{
+		token = strtok(NULL, " ");
+		tab[s] = _strdup(token);
+		s++;
+	}
+}
+/**
 *main - an interractble shell
 *@argc: number of arguments
 *@argv: lit of arguments
@@ -48,42 +66,35 @@ char *_strdup(char const *str)
 int main(int argc, char const *argv[])
 {
 	(void)argc;
-	char *cmd_in, *pname, **argum;
+	char *pname, **argum;
 	size_t size = 32;
 	int i;
 
 	pname = malloc(sizeof(argv[0]));
 	pname = _strdup(argv[0]);
-	cmd_in = (char *)malloc(size * sizeof(char));
-	if (cmd_in == NULL)
-	{
-		perror("Unable to allocate cammand buffer");
-		exit(-1);
-	}
-	argum = malloc(sizeof(cmd_in));
-	argum[1] = NULL;
+
+	argum = malloc(sizeof(char *));
 	if (!isatty(fileno(stdin)))
 	{
-		write(1, "$ ", 2);
-		getline(&cmd_in, &size, stdin);
-		cmd_in = strtok(cmd_in, "\n");
-		argum[0] = cmd_in;
-		if (execv(cmd_in, argum) == -1)
+		write(1, "#cisfun$ ", 9);
+		getline(&argum[0], &size, stdin);
+		stoarr(argum[0], argum);
+		if (execv(argum[0], argum) == -1)
 			perror(pname);
 		return (0);
 	}
 	while (1)
 	{
-		write(1, "$ ", 2);
-		getline(&cmd_in, &size, stdin);
-		cmd_in = strtok(cmd_in, "\n");
-		argum[0] = cmd_in;
-		if (fork() == 0 && execv(cmd_in, argum) == -1)
-				perror(pname);
+		write(1, "#cisfun$ ", 9);
+		getline(&argum[0], &size, stdin);
+		if (argum[0][0] == 'e')
+		{
+			exit(1);
+		}
+		stoarr(argum[0], argum);
+		if (fork() == 0 && execv(argum[0], argum) == -1)
+			perror(pname);
 		wait(&i);
 	}
-	free(cmd_in);
-	free(pname);
-	free(argum);
 	return (0);
 }
