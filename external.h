@@ -8,4 +8,9 @@
 #include <string.h>
 #include <sys/wait.h>
 
+int fid_div(char *s);
+int _strlen(const char *s);
+char *_strdup(char const *str);
+void stoarr(char *str, char **tab);
+
 #endif

@@ -1,89 +1,27 @@
 #include "external.h"
 /**
-*_strlen - 0
-*@s: char
-*Return:: i
+*free_all - exit
+*@str: array of string to be free
+*@pname: string to be free
 */
-int _strlen(const char *s)
+void free_all(char **str, char *pname)
 {
-	int i;
-
-	i = 0;
-	while (*s != '\0' && s)
-	{
-		s++;
-		i++;
-	}
-	return (i);
-}
-/**
- * _strdup - duplicate a string
- * @str: the string to duplicate
- * Return: string.
- */
-char *_strdup(char const *str)
-{
-	char *p;
-	int i, j;
-
-
-	if (str == NULL)
-	{
-		return (NULL);
-	}
-
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-
-
-	p = malloc(i + 1 * sizeof(char));
-	if (p == NULL)
-	{
-		return (NULL);
-	}
-
-	j = 0;
-	while (j <= i)
-	{
-		p[j] = str[j];
-		j++;
-	}
-
-	return (p);
-}
-/**
-*stoarr - convert a string to array seperated by space
-*@str: string
-*@tab: the table to fill from 1 index
-*/
-void stoarr(char *str, char **tab)
-{
-	char *token;
-	int s = 1;
-
-	token = strtok(str, "\n");
-	token = strtok(token, " ");
-	while (token != NULL)
-	{
-		token = strtok(NULL, " ");
-		tab[s] = _strdup(token);
-		s++;
-	}
+	free(*str);
+	free(str);
+	free(pname);
 }
 /**
 *ifexit - exit
-*@str: string
+*@str: string to be free
+*@pname: string to be free
 */
-void ifexit(char *str)
+void ifexit(char **str, char *pname)
 {
-	str = strtok(str, "\n");
-	if (str[0] == 'e' && str[1] == 'x' && str[2] == 'i'
-		&& str[3] == 't' && str[4] == '\0')
+	str[0] = strtok(str[0], "\n");
+	if (str[0][0] == 'e' && str[0][1] == 'x' && str[0][2] == 'i'
+		&& str[0][3] == 't' && str[0][4] == '\0')
 	{
+		free_all(str, pname);
 		exit(0);
 	}
 }
@@ -96,19 +34,17 @@ void ifexit(char *str)
 int main(int argc, char const *argv[])
 {
 	(void)argc;
-	char *pname, **argum;
+	char *pname, **argum, *hold;
 	size_t size = 32;
-	int i;
+	int i = 0;
 
 	pname = malloc(sizeof(argv[0]));
 	pname = _strdup(argv[0]);
-
-	argum = malloc(sizeof(char *));
 	if (!isatty(fileno(stdin)))
 	{
 		write(1, ":) ", 3);
 		getline(&argum[0], &size, stdin);
-		ifexit(argum[0]);
+		ifexit(argum, pname);
 		stoarr(argum[0], argum);
 		if (execvp(argum[0], argum) == -1)
 			perror(pname);
@@ -117,8 +53,11 @@ int main(int argc, char const *argv[])
 	while (1)
 	{
 		write(1, ":) ", 3);
-		getline(&argum[0], &size, stdin);
-		ifexit(argum[0]);
+		hold = malloc(sizeof(char *));
+		getline(&hold, &size, stdin);
+		argum = malloc(sizeof(char *) * fid_div(hold));
+		argum[0] = hold;
+		ifexit(argum, pname);
 		stoarr(argum[0], argum);
 		if (fork() == 0)
 		{
@@ -126,6 +65,7 @@ int main(int argc, char const *argv[])
 			{
 				perror(pname);
 			}
+			free_all(argum, pname);
 			exit(0);
 		}
 		wait(&i);
