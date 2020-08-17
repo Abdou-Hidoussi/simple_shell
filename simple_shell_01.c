@@ -79,7 +79,7 @@ int main(int argc, char const *argv[])
 		cmd_in = strtok(cmd_in, "\n");
 		argum[0] = cmd_in;
 		if (fork() == 0 && execv(cmd_in, argum) == -1)
-				perror(pname);
+			perror(pname);
 		wait(&i);
 	}
 	free(cmd_in);
