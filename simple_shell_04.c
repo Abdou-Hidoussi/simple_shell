@@ -65,9 +65,7 @@ int main(int argc, char const *argv[])
 		if (fork() == 0)
 		{
 			if (execvp(argum[0], argum) == -1)
-			{
 				perror(pname);
-			}
 			free_all(argum, pname);
 			exit(0);
 		}
