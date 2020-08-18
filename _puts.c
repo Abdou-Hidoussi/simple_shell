@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "external.h"
 /**
  * _puts - writes the string
  * @str: The character to print

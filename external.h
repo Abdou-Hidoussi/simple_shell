@@ -8,6 +8,8 @@
 #include <string.h>
 #include <sys/wait.h>
 
+int _putchar(char c);
+void _puts(char *str);
 int fid_div(char *s);
 int _strlen(const char *s);
 char *_strdup(char const *str);
