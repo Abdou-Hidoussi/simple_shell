@@ -42,17 +42,20 @@ int main(int argc, char const *argv[])
 	pname = _strdup(argv[0]);
 	if (!isatty(fileno(stdin)))
 	{
-		write(1, ":) ", 3);
-		getline(&argum[0], &size, stdin);
+		hold = malloc(sizeof(char *));
+		getline(&hold, &size, stdin);
+		argum = malloc(sizeof(char *) * fid_div(hold));
+		argum[0] = hold;
 		ifexit(argum, pname);
 		stoarr(argum[0], argum);
 		if (execvp(argum[0], argum) == -1)
 			perror(pname);
+		free_all(argum, pname);
 		return (0);
 	}
 	while (1)
 	{
-		write(1, ":) ", 3);
+		write(1, "$ ", 2);
 		hold = malloc(sizeof(char *));
 		getline(&hold, &size, stdin);
 		argum = malloc(sizeof(char *) * fid_div(hold));
