@@ -34,7 +34,8 @@ void ifexit(char **str, char *pname)
 int main(int argc, char const *argv[])
 {
 	(void)argc;
-	char *pname, **argum, *hold;
+	char *pname, *hold;
+	char **argum;
 	size_t size = 32;
 	int i = 0;
 
