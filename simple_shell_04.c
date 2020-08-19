@@ -41,9 +41,9 @@ int main(int argc, char const *argv[])
 
 	pname = malloc(sizeof(argv[0]));
 	pname = _strdup(argv[0]);
+	hold = malloc(sizeof(char *));
 	if (!isatty(fileno(stdin)))
 	{
-		hold = malloc(sizeof(char *));
 		getline(&hold, &size, stdin);
 		argum = malloc(sizeof(char *) * fid_div(hold));
 		argum[0] = hold;
@@ -56,17 +56,17 @@ int main(int argc, char const *argv[])
 	}
 	while (1)
 	{
-		write(1, "$ ", 2);
-		hold = malloc(sizeof(char *));
+		write(1, "#cisfun$ ", 9);
 		getline(&hold, &size, stdin);
+		if (hold[0] == '\0')
+			exit(0);
 		argum = malloc(sizeof(char *) * fid_div(hold));
 		argum[0] = hold;
 		ifexit(argum, pname);
 		stoarr(argum[0], argum);
-		if (fork() == 0)
+		if (fork() == 0 && execvp(argum[0], argum) == -1)
 		{
-			if (execvp(argum[0], argum) == -1)
-				perror(pname);
+			perror(pname);
 			free_all(argum, pname);
 			exit(0);
 		}
